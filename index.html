@@ -363,8 +363,9 @@ function nextQuestion() {
     if (current < questions.length) {
         loadQuestion();
     } else {
+        const percent = Math.round((score / questions.length) * 100);
         document.getElementById("finalScore").innerText =
-            "Your Score: " + score + " / " + questions.length;
+            "Your Score: " + score + " / " + questions.length + " (" + percent + "%)";
         document.getElementById("progressBar").style.width = "100%";
         renderWrongAnswers();
         document.getElementById("resultPopup").style.display = "flex";
@@ -411,8 +412,9 @@ function renderWrongAnswers() {
 
 function shareResult() {
     const wrongCount = wrongAnswers.length;
+    const percent = Math.round((score / questions.length) * 100);
     const text = "Maine Computer Test me " + score + "/" + questions.length +
-        " score kiya. Galat: " + wrongCount + ".";
+        " (" + percent + "%) score kiya. Galat: " + wrongCount + ".";
     const url = "https://wa.me/?text=" + encodeURIComponent(text);
     window.open(url, "_blank");
 }
