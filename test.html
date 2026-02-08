@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Computer Test - OGGY</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.container {
+    width: 90%;
+    max-width: 650px;
+    background: rgba(0,0,0,0.6);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0,255,255,0.3);
+    text-align: center;
+    animation: fadeIn 0.8s ease;
+}
+
+h2 {
+    margin-bottom: 10px;
+}
+
+.creator {
+    font-size: 12px;
+    color: #00eaff;
+    margin-bottom: 15px;
+}
+
+.progress {
+    height: 8px;
+    background: #333;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #00eaff, #00ff9d);
+    transition: width 0.4s;
+}
+
+#question {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 8px;
+    background: #222;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 15px;
+}
+
+button:hover {
+    background: #00eaff;
+    color: black;
+    transform: scale(1.03);
+}
+
+.correct {
+    background: #00c853 !important;
+}
+
+.wrong {
+    background: #ff1744 !important;
+}
+
+#explanation {
+    margin-top: 10px;
+    color: #ffd54f;
+    font-size: 14px;
+}
+
+.explanation-correct {
+    color: #8aff8a;
+}
+
+.explanation-wrong {
+    color: #ffd54f;
+}
+
+#nextBtn {
+    background: linear-gradient(90deg, #00eaff, #00ff9d);
+    color: black;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+#shareBtn {
+    background: linear-gradient(90deg, #25d366, #1ebe5b);
+    color: black;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+#resultPopup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.popup-content {
+    background: #111;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 0 25px cyan;
+    width: 90%;
+    max-width: 720px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.wrong-list {
+    text-align: left;
+    background: #0b0b0b;
+    margin-top: 18px;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #1e1e1e;
+}
+
+.wrong-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #222;
+}
+
+.wrong-item:last-child {
+    border-bottom: none;
+}
+
+.wrong-q {
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.wrong-a,
+.wrong-c,
+.wrong-e {
+    font-size: 14px;
+    margin: 3px 0;
+}
+
+.wrong-c {
+    color: #8aff8a;
+}
+
+.wrong-e {
+    color: #ffd54f;
+}
+
+@keyframes fadeIn {
+    from {opacity:0; transform:translateY(20px);}
+    to {opacity:1; transform:translateY(0);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Computer Fact Test</h2>
+    <div class="creator">Created by OGGY</div>
+
+    <div class="progress">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <p id="question"></p>
+    <div id="options"></div>
+    <p id="explanation"></p>
+    <button id="nextBtn" onclick="nextQuestion()">Next</button>
+</div>
+
+<div id="resultPopup">
+    <div class="popup-content">
+        <h2>Test Completed</h2>
+        <h3 id="finalScore"></h3>
+        <button id="shareBtn" onclick="shareResult()">Share on WhatsApp</button>
+        <div class="wrong-list">
+            <h3>Galat Questions Review</h3>
+            <div id="wrongList"></div>
+        </div>
+        <p>Created by OGGY</p>
+    </div>
+</div>
+
+<script>
+const questions = [
+{q:"Computer ek electronic machine hai jo kya karta hai?",o:["Sirf data store karta hai","Input leta, process karta aur output deta hai","Sirf internet chalata hai","Sirf games khelta hai"],a:1,e:"Computer ka basic cycle Input -> Process -> Output hota hai."},
+{q:"'Father of Computer' kisko mana jata hai?",o:["Charles Babbage","Alan Turing","Bill Gates","Steve Jobs"],a:0,e:"Charles Babbage ko Father of Computer mana jata hai."},
+{q:"World ka first electronic computer kaunsa tha?",o:["ENIAC","UNIVAC","ABACUS","PARAM 8000"],a:0,e:"World ka first electronic computer ENIAC (1946) tha."},
+{q:"India ka first supercomputer kaunsa tha?",o:["PARAM 8000","CRAY-1","Deep Blue","Siddhi"],a:0,e:"PARAM 8000 (1991, C-DAC Pune) India ka first supercomputer tha."},
+{q:"Computer ke main parts (basic components) kaun se hain?",o:["Input Unit, CPU, Memory, Output Unit","Mouse, Keyboard, CPU, Pen Drive","Internet, Browser, Email, OS","Printer, Speaker, UPS, Router"],a:0,e:"Basic components: Input Unit, CPU, Memory, Output Unit."},
+{q:"Data ka matlab kya hota hai?",o:["Processed meaningful facts","Raw facts jinka khud ka meaning nahi","Sirf images","Sirf numbers"],a:1,e:"Data raw facts hote hain jo process hone par information bante hain."},
+{q:"Information ka matlab kya hota hai?",o:["Raw facts","Processed data jo meaningful ho","Sirf letters","Sirf symbols"],a:1,e:"Information = processed data jo meaningful ban jata hai."},
+{q:"Information Technology (IT) ka sahi meaning kya hai?",o:["Sirf computer ka use","Computer + Internet + Software se info store/process/share","Sirf mobile use","Sirf networking"],a:1,e:"IT me computer, internet aur software ka use karke info ko store/process/share kiya jata hai."},
+
+{q:"Computer system ke parts kaun se hote hain?",o:["Hardware, Software, Data, User","CPU, RAM, ROM, Hard Disk","Keyboard, Mouse, Monitor, Speaker","Internet, Browser, Email, HTML"],a:0,e:"Computer system = hardware + software + data + user."},
+{q:"Hardware kya hota hai?",o:["Physical parts jo dekhe aur chhuye ja sakte hain","Programs/Instructions","Internet service","Data processing method"],a:0,e:"Hardware computer ke physical parts hote hain."},
+{q:"Software kya hota hai?",o:["Instructions/Programs jo computer ko kaam batate hain","Physical parts","Electric current","Network cable"],a:0,e:"Software computer ke liye instructions/programs hote hain."},
+{q:"Software ke types kaun se hote hain?",o:["System Software aur Application Software","Input aur Output Software","Wired aur Wireless Software","Primary aur Secondary Software"],a:0,e:"Software ke main types: System Software aur Application Software."},
+{q:"CPU ka full form kya hai?",o:["Central Processing Unit","Control Program Unit","Computer Power Unit","Central Print Unit"],a:0,e:"CPU = Central Processing Unit."},
+{q:"CPU ke parts kaun se hote hain?",o:["CU, ALU, Registers","RAM, ROM, Cache","Keyboard, Mouse, Monitor","OS, Browser, Antivirus"],a:0,e:"CPU ke main parts: CU, ALU, Registers."},
+{q:"RAM ki khasiyat kya hoti hai?",o:["Permanent memory hoti hai","Temporary memory hoti hai, power off par data chala jata hai","Sirf boot program rakhti hai","Hard disk ke barabar hoti hai"],a:1,e:"RAM volatile memory hoti hai, power off par data delete ho jata hai."},
+{q:"ROM ka main use kya hai?",o:["Temporary data store","Boot program store, data permanent hota hai","Internet connect karna","Graphics banana"],a:1,e:"ROM me boot program hota hai aur ye permanent memory hoti hai."},
+{q:"Cache memory kaisi hoti hai?",o:["Sabse slow memory","CPU ke paas wali fastest memory","Sirf hard disk ka part","Sirf pen drive me hoti hai"],a:1,e:"Cache memory CPU ke bilkul paas hoti hai aur fastest hoti hai."},
+
+{q:"Decimal number system me kitne digits hote hain?",o:["0-1","0-7","0-9","0-15"],a:2,e:"Decimal system me 0 se 9 tak digits hote hain."},
+{q:"Binary number system me kaun se digits hote hain?",o:["0 aur 1","0-7","0-9","1-9"],a:0,e:"Binary me sirf 0 aur 1 use hote hain."},
+{q:"Octal number system me digits ka range kya hota hai?",o:["0-7","0-1","0-9","0-15"],a:0,e:"Octal system me 0 se 7 tak digits hote hain."},
+{q:"Hexadecimal system me digits kaun-kaun se hote hain?",o:["0-9 aur A-F","0-7","0-9","1-16"],a:0,e:"Hexa me 0-9 aur A-F digits hote hain (A=10, B=11...)."},
+{q:"Logic gate kya hota hai?",o:["Data store karne wali memory","Decision lene wala electronic circuit","Internet connect karne ka device","Output device"],a:1,e:"Logic gate decision/true-false output dene wala circuit hota hai."},
+{q:"AND gate ka output kab true hota hai?",o:["Jab dono input true ho","Jab koi ek input true ho","Hamesha true","Hamesha false"],a:0,e:"AND gate me output tab hi true hota hai jab dono input true hon."},
+{q:"NOT gate ka output kaisa hota hai?",o:["Input jaisa hi","Input ka ulta","Dono input true par hi","Sirf 0 deta hai"],a:1,e:"NOT gate input ka ulta output deta hai."},
+{q:"High level language ka example kaunsa hai?",o:["C","MOV","1010","AND"],a:0,e:"High level languages human-friendly hoti hain jaise C, C++, Java, Python."},
+{q:"Compiler ka kaam kya hota hai?",o:["Line by line translate karna","Poora program ek saath machine language me badalna","Sirf errors dikhana","Hardware repair karna"],a:1,e:"Compiler poore program ko ek saath machine language me convert karta hai."},
+
+{q:"Operating System (OS) kya hai?",o:["User aur hardware ke beech bridge","Sirf game","Input device","Browser"],a:0,e:"OS user aur hardware ke beech bridge ka kaam karta hai."},
+{q:"OS ka ek important function kya hai?",o:["Memory management","Songs play karna","Typing sikhana","Monitor repair"],a:0,e:"OS ka kaam memory ko manage karna hota hai."},
+{q:"Real Time OS kahaan use hota hai?",o:["Railway/Missile system","Photo editor","Music player","Word processor"],a:0,e:"Real Time OS me delay allowed nahi hota, isliye railway/missile systems me use hota hai."},
+{q:"Modern OS ka base kis OS ko mana jata hai?",o:["UNIX","DOS","BASIC","COBOL"],a:0,e:"Modern OS ka base UNIX (1969, AT&T Labs) mana jata hai."},
+{q:"Linux ko kisne banaya?",o:["Linus Torvalds (1991)","Bill Gates","Charles Babbage","Tim Berners-Lee"],a:0,e:"Linux ko Linus Torvalds ne 1991 me banaya."},
+{q:"GUI ka matlab kya hai?",o:["Icons aur mouse se computer chalana","Sirf commands type karna","Hardware repair tool","Networking protocol"],a:0,e:"GUI me user icons/pictures aur mouse se computer use karta hai."},
+
+{q:"Internet ka sahi meaning kya hai?",o:["Network of networks","Sirf ek website","Sirf email service","Ek operating system"],a:0,e:"Internet = network of networks."},
+{q:"Internet ke Father kaun hain?",o:["Vint Cerf aur Bob Kahn","Tim Berners-Lee","Bill Gates","Ray Tomlinson"],a:0,e:"Vint Cerf aur Bob Kahn ko Father of Internet kaha jata hai."},
+{q:"WWW (World Wide Web) kisne banaya?",o:["Tim Berners-Lee","Vint Cerf","Linus Torvalds","Dennis Ritchie"],a:0,e:"WWW ko Tim Berners-Lee ne 1989 me banaya."},
+{q:"Web browser ka example kaunsa hai?",o:["Google Chrome","Windows","Linux","Android"],a:0,e:"Chrome, Firefox, Edge jaise apps web browser hote hain."},
+{q:"Search engine ka example kaunsa hai?",o:["Google","MS Word","Paint","Notepad"],a:0,e:"Google, Bing, Yahoo search engines hain."},
+{q:"Email ka avishkar kisne kiya?",o:["Ray Tomlinson (1971)","Tim Berners-Lee","Steve Jobs","Alan Turing"],a:0,e:"First email Ray Tomlinson ne 1971 me bheja."},
+{q:"Email address me @ se pehle wale part ko kya kehte hain?",o:["User ID","Domain Name","Protocol","Password"],a:0,e:"@ se pehle wala part User ID hota hai."},
+
+{q:"Computer Network kya hota hai?",o:["Connected computers ka group jo data share kare","Sirf ek computer","Operating system","Hard disk"],a:0,e:"Computer network me multiple computers connected hote hain taaki data/resource share ho."},
+{q:"LAN ka matlab kya hai?",o:["Local Area Network (chhota area)","Large Area Network","Long Area Network","Line Area Network"],a:0,e:"LAN chhote area jaise office/school me hota hai."},
+{q:"WAN ka matlab kya hai?",o:["Wide Area Network (country/world)","Wireless Area Network","World Area Node","Wide Access Node"],a:0,e:"WAN bahut bade area (country/world) me hota hai."},
+{q:"Modem ka main kaam kya hota hai?",o:["Digital-analog signal convert karna","Print karna","Data delete karna","Screen display"],a:0,e:"Modem digital signal ko analog aur analog ko digital me convert karta hai."},
+{q:"Router ka use kya hai?",o:["Data ko sahi raaste par bhejna / Wi-Fi distribute","Keyboard input lena","Audio play","Hard disk store"],a:0,e:"Router data ko sahi path par bhejta hai aur Wi-Fi distribute karta hai."},
+{q:"Switch ka kaam kya hota hai?",o:["Multiple computers ko connect karna","Digital-analog convert karna","Websites open karna","Virus remove karna"],a:0,e:"Switch LAN me multiple computers ko connect karta hai."},
+
+{q:"E-Commerce ka matlab kya hai?",o:["Internet se cheeze kharidna aur bechna","Sirf bank ka kaam","Sirf social media","Offline shopping"],a:0,e:"E-Commerce me online buying aur selling hoti hai."},
+{q:"B2C ka example kaunsa hai?",o:["Amazon/Flipkart","Wholesale market","Government office","School"],a:0,e:"B2C me business seedha customer ko sell karta hai (Amazon/Flipkart)."},
+{q:"E-Governance ka matlab kya hai?",o:["Government services online dena","Sirf private apps","Offline paperwork","Gaming portal"],a:0,e:"E-Governance me government services internet ke through citizens ko milti hain."},
+{q:"G2C ka full form kya hota hai?",o:["Government to Citizen","Government to Company","Group to Client","Gateway to City"],a:0,e:"G2C ka matlab Government to Citizen hota hai."},
+
+{q:"Cyber Law kya hota hai?",o:["Internet aur digital crimes ko control karne wale laws","Sirf traffic rules","School rules","Game rules"],a:0,e:"Cyber Law online crimes ko control karta hai."},
+{q:"IT Act India me kab pass hua?",o:["2000","1991","2008","2015"],a:0,e:"IT Act India me 2000 me pass hua (baad me 2008 me amendment hua)."},
+{q:"IT Act ka Section 66 kis se related hai?",o:["Hacking","Education","Banking","Tax"],a:0,e:"Section 66 hacking se related hai."},
+{q:"Cyber crime ka example kaunsa hai?",o:["Phishing","Keyboard typing","Printing","File save"],a:0,e:"Phishing me fake message se data chori kiya jata hai."},
+{q:"Digital Signature kya hota hai?",o:["Electronic signature jo online documents ko legal banata hai","Password reset","Antivirus","Image format"],a:0,e:"Digital signature online documents ko legally valid banata hai."},
+{q:"Cyber Ethics ka sahi example kya hai?",o:["Pirated software use na karna","Fake news spread karna","Unknown links open karna","Kisi ka data leak karna"],a:0,e:"Cyber ethics me sahi aur imandaar internet use shamil hota hai."}
+];
+
+let current = 0;
+let score = 0;
+let wrongAnswers = [];
+
+function loadQuestion() {
+    const explanation = document.getElementById("explanation");
+    explanation.innerText = "";
+    explanation.className = "";
+    const q = questions[current];
+    document.getElementById("question").innerText = (current+1) + ". " + q.q;
+
+    const optionsDiv = document.getElementById("options");
+    optionsDiv.innerHTML = "";
+
+    q.o.forEach((opt, i) => {
+        let btn = document.createElement("button");
+        btn.innerText = opt;
+        btn.onclick = () => checkAnswer(btn, i);
+        optionsDiv.appendChild(btn);
+    });
+
+    document.getElementById("progressBar").style.width =
+        ((current / questions.length) * 100) + "%";
+}
+
+function checkAnswer(btn, index) {
+    const q = questions[current];
+    const buttons = document.querySelectorAll("#options button");
+    buttons.forEach(b => b.disabled = true);
+
+    if (index === q.a) {
+        btn.classList.add("correct");
+        score++;
+        const explanation = document.getElementById("explanation");
+        explanation.className = "explanation-correct";
+        explanation.innerText = "Sahi! Answer: " + q.o[q.a] + ". " + q.e;
+    } else {
+        btn.classList.add("wrong");
+        buttons[q.a].classList.add("correct");
+        const explanation = document.getElementById("explanation");
+        explanation.className = "explanation-wrong";
+        explanation.innerText = "Galat. Sahi Answer: " + q.o[q.a] + ". " + q.e;
+        wrongAnswers.push({
+            question: q.q,
+            chosen: q.o[index],
+            correct: q.o[q.a],
+            explanation: q.e
+        });
+    }
+}
+
+function nextQuestion() {
+    current++;
+    if (current < questions.length) {
+        loadQuestion();
+    } else {
+        document.getElementById("finalScore").innerText =
+            "Your Score: " + score + " / " + questions.length;
+        document.getElementById("progressBar").style.width = "100%";
+        renderWrongAnswers();
+        document.getElementById("resultPopup").style.display = "flex";
+    }
+}
+
+function renderWrongAnswers() {
+    const list = document.getElementById("wrongList");
+    list.innerHTML = "";
+    if (wrongAnswers.length === 0) {
+        const p = document.createElement("p");
+        p.innerText = "Shandaar! Koi galat answer nahi.";
+        list.appendChild(p);
+        return;
+    }
+
+    wrongAnswers.forEach((item, i) => {
+        const wrap = document.createElement("div");
+        wrap.className = "wrong-item";
+
+        const q = document.createElement("div");
+        q.className = "wrong-q";
+        q.innerText = (i + 1) + ". " + item.question;
+
+        const a = document.createElement("div");
+        a.className = "wrong-a";
+        a.innerText = "Aapka Answer: " + item.chosen;
+
+        const c = document.createElement("div");
+        c.className = "wrong-c";
+        c.innerText = "Sahi Answer: " + item.correct;
+
+        const e = document.createElement("div");
+        e.className = "wrong-e";
+        e.innerText = "Explanation: " + item.explanation;
+
+        wrap.appendChild(q);
+        wrap.appendChild(a);
+        wrap.appendChild(c);
+        wrap.appendChild(e);
+        list.appendChild(wrap);
+    });
+}
+
+function shareResult() {
+    const wrongCount = wrongAnswers.length;
+    const text = "Maine Computer Test me " + score + "/" + questions.length +
+        " score kiya. Galat: " + wrongCount + ".";
+    const url = "https://wa.me/?text=" + encodeURIComponent(text);
+    window.open(url, "_blank");
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>
